@@ -378,6 +378,6 @@ member.setRoleType(RoleType.ADMIN);
 - AccessType.PROPERTY로 지정한다. 접근자를 사용한다. 
 ------ 
 #### CheckList 
-- [UUUUuUUU] UUID  
+- [] UUID  
 - 
 
