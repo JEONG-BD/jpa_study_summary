@@ -287,14 +287,154 @@ private static void deleteRelation(EntityManager me) {
 
 ## 5.3 양방향 연관관계 
 - 회원과 팀은 다대일 관계다. 
-- 팀과 회원은 일대다 관계이다. 일대다 관계는 여러 건과 연관관계를 맺을 수 있으므로 컬렉을 사용해야 한다. 
+- 팀과 회원은 일대다 관계이다. 일대다 관계는 여러 건과 연관관계를 맺을 수 있으므로 컬렉션을 사용해야 한다. 
 - JPA는 List를 포함해서 Collection, Set, Map와 같은 다양한 컬렉션을 지원한다. 
-- 데이터베이스 테이블은 외래키 하나로 양방향으로 조회가 가늘하다. 따라서 데이터베이스에 추가할 내용은 전혀 없다. 
+- 데이터베이스 테이블은 외래키 하나로 양방향으로 조회가 가능하다. 따라서 데이터베이스에 추가할 내용은 전혀 없다. 
 ### 5.3.1 양방향 연관관계 매핑 
+```java
+@Entity 
+public class Member {
+    @Id
+    @Column(name="MEMBER_ID")
+    private String id; 
+
+    private String username; 
+
+    @ManyToOne
+    @JoinColumn(name="TEAM_ID")
+    private Team team; 
+
+    public void setTeam(Team team){
+        this.team = team; 
+    
+    }
+}
+
+@Entity
+public class Team {
+    @Id
+    @Column(name="TEAM_ID")
+    private String id; 
+
+    private String name; 
+
+    @OneToMany(mappedBy="team")
+    private List<Member> members = new ArrayList<Member>(); 
+}
+
+```
+### 5.3.2 일대다 컬렉션 조회 
+```java 
+
+public void biDirection(){
+    Team team = em.find(Team.class, "team1");
+
+    List<Member> members = team.getMembers();
+
+    for(Member member : members) {
+        System.out.println("member.username" + member.getUsername); 
+    }
+
+}
+
+```
 
 ## 5.4 연관관계 주인 
-## 5.5 양뱡향 연관관계 저장
-## 5.6 양방향 연관관계 주의점 
-## 5.7 정리 
+- 객체에는 양방향 연관관계라는 것이 없다. 서로 다른 단방향 연관관계 2개를 에플리케이션 로직을 잘 묶어서 양방향 인 것 처럼 보이게 할 뿐이다. 
+- 엔티티를 단방향으로 매핑하면 참조를 하나만 사용하므로 이 참조로 외래키를 관리하면 된다. 하지만 엔티티를 양방향으로 매핑하면 두 곳에서 서로를 참조한다. 따라서 객체의 연관관계를 관리하는 포인트는 2 곳으로 늘어난다.
+- 위의 차이로 JPA는 두 객체 연관 관계 중 하나를 정해서 테이블의 외래 키를 관리해야 하는데 이것을 연관관계의 주인이라 한다. 
 
+### 5.4.1 양방향 매핑 규칙 : 연관관계의 주인 
+- 양방향 연관관계 매핑시 지켜야 할 규칙이 있는데 두 연관관계 중 하나를 연관관계의 주인으로 정해야 한다. 
+- 연관관계의 주인 만이 데이터베이스 연관관계와 매핑되고 외래 키를 관리 할 수 있고, 반면에 주인이 아닌 쪽은 읽기만 할 수 있다. 
+- 주인은 mappedBy 속성을 사용하지 않는다. 
+- 주인이 아니면 mappedBy 속성을 사용해서 속성의 값으로 연관관계의 주인을 지정해야 한다. 
+
+### 5.4.2 연관관계의 주인은 외래키가 있는 곳 
+- 연관 관계의 주인은 테이블에 외래키가 있는 곳으로 정해야 한다. 
+- 데이터베이스 테이블의 다대일, 일대다 관계에서는 항상 다 쪽이 외래키를 가진다. 
+
+## 5.5 양뱡향 연관관계 저장
+```java
+public void testSave(){
+    Team team = new Team("team1", "팀1"); 
+    em.persist("team1")
+
+    Member member1 = new Member("member1", "회원1")
+    member1.setTeam(team); 
+    em.persist(member1); 
+
+    Member member2 = new Member("member2", "회원2")
+    member2.setTeam(team); 
+    em.persist(member2); 
+}
+```
+## 5.6 양방향 연관관계 주의점 
+- 양방향 연관관계를 설정하고 가장 흔히 하는 실수는 연관 관계의 주인에는 값을 입력하지 않고 주인이 아닌 곳에만 값을 입력하는 것이다. 
+### 5.6.1 순수한 객체까지 고려한 양방향 연관관계 
+- 연관 관계의 주인에만 값을 저장하고 주인이 아닌 곳에는 값을 저장하지 않아도 될까? 
+- 객체 관점에서 양쪽 방향 모두 값을 입력해주는 것이 가장 안전하다. 
+```java
+public void 순수객체_양방향(){
+    Team team1 = new Team("team1", "팀1"); 
+    Member member1 = new Member("member1", "회원1");
+    Member member2 = new Member("member2", "회원2"); 
+
+    member1.setTeam(team1);
+    member2.setTeam(team1);
+
+    List<Member> members = team1.getMembers(); 
+    System.out.println("members.size =" + members.size())
+    // member.size = 0 
+
+}
+```
+```java
+public void 순수객체_양방향(){
+    Team team1 = new Team("team1", "팀1"); 
+    Member member1 = new Member("member1", "회원1");
+    Member member2 = new Member("member2", "회원2"); 
+
+    member1.setTeam(team1);
+    team1.getMembers().add(member1);
+
+    member2.setTeam(team1);
+    team1.getMembers().add(member2);
+
+
+    List<Member> members = team1.getMembers(); 
+    System.out.println("members.size =" + members.size())
+    // member.size = 1 
+
+}
+```
+### 5.6.2 연관관계 편의 메소드 
+- 양방향 연관관계는 결국 양쪽 다 신경 써야 한다. 
+```java
+member.setTeam(team); 
+team.getMembers().add(member);
+```
+- 양방향 관계에서 두 코드는 하나인 것 처럼 사용하는 것이 안전하다. 
+```java
+public class Member{
+
+    private Team team; 
+
+    // public void getTeam(Team team){
+    //     this.team = team; 
+    //     team.getMembers().add(this);
+    // }
+
+    public void getTeam(Team team){
+        
+        if(this.team != null){
+            this.team.getMembers().remove(this);
+        }
+        this.team = team; 
+        team.getMembers().add(this);
+    }
+
+}
+
+```
 
