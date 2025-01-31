@@ -6,13 +6,24 @@
 - 이것은 단순히 매핑 정보를 상속할 목적으로만 사용된다. 
 
 ```java
-@MappedSuperClass 
+@MappedSuperclass 
 public abstract class BaseEntity {
     @Id 
     @GeneratedValue 
     private Long id; 
     private String name; 
+}
 
+@Entity 
+public class Member extends BaseEntity {
+    private String email;
+    
+}
+
+@Entity 
+public class Member extends BaseEntity {
+    private String email;
+    
 }
 
 @Entity 
