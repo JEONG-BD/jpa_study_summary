@@ -13,7 +13,7 @@
 ```java
 @Entity 
 @Inheritance(strategy=InheritanceType.JOINED)
-@DiscriminatorColumn(name="DTYPE")
+@DiscriminatorValue(name="DTYPE")
 public abstract class Item{
     @Id
     @GeneratedValue
@@ -24,14 +24,14 @@ public abstract class Item{
     private int price; 
 }
 @Entity
-@DiscrimanatorValue("A")
+@DiscriminatorValue("A")
 public class Album extends Item{
     private String artist; 
     ...
 }
 
 @Entity 
-@DiscrimanatorValue("M")
+@DiscriminatorValue("M")
 public class Movie extends Item{
     private String director;
     private String actor;  
@@ -54,7 +54,7 @@ public class Movie extends Item{
 
 ```java
 @Entity 
-@DiscrimanatorValue("B")
+@DiscriminatorValue("B")
 @PrimaryKeyJoinColumn(name = "BOOK_ID")
 public class Book extends Item{
     private String autor;
@@ -92,14 +92,14 @@ publc abstract class Item {
 
 }
 @Entity
-@DiscrimanatorValue("A")
+@DiscriminatorValue("A")
 public class Album extends Item{
     private String artist; 
     ...
 }
 
 @Entity 
-@DiscrimanatorValue("M")
+@DiscriminatorValue("M")
 public class Movie extends Item{
     private String director;
     private String actor;  

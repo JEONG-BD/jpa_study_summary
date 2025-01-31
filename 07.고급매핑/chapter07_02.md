@@ -17,18 +17,6 @@ public abstract class BaseEntity {
 @Entity 
 public class Member extends BaseEntity {
     private String email;
-    
-}
-
-@Entity 
-public class Member extends BaseEntity {
-    private String email;
-    
-}
-
-@Entity 
-public class Member extends BaseEntity {
-    private String email;
 }
 
 @Entity 
