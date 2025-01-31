@@ -128,7 +128,6 @@ public class Movie extends Item{
 
 @Entity 
 @Inheritance(strategy= Inheritance.TABLE_PER_CLASS)
-@DiscriminatorColumn(name="DTYPE")
 publc abstract class Item {
     @Id
     @GeneratedValue
@@ -139,14 +138,12 @@ publc abstract class Item {
 
 }
 @Entity
-@DiscrimanatorValue("A")
 public class Album extends Item{
     private String artist; 
     ...
 }
 
 @Entity 
-@DiscrimanatorValue("M")
 public class Movie extends Item{
     private String director;
     private String actor;  
