@@ -47,7 +47,7 @@ private static void saveNoCascase(EntityManager em){
 ```
 - JPA에서 엔티티를 저장할 때 연관된 모든 엔티티는 영속 상태여야 하기 때문에 부모 엔티티를 영속 상태로 만들고 자식 엔티티도 각각 영속 상태로 만든다. 이럴 때 영속성 전이를 사용하면 부모만 영속 상태로 만들면 연관된 자식까지 한 번에 영속 상태로 만들 수 있다. 
 
-### 8.4.1 영속성 잔전이 : 저장 
+### 8.4.1 영속성 전이 : 저장 
 ```java 
 @Entity 
 public class Parent{
@@ -127,11 +127,11 @@ parent1.getChild().remove(0); //자식 엔티티를 컬렉션에서 제거
 // DELETE FROM CHILD WHERE ID = ?
 
 ```
-- 고아 객체는 참조가 제거된 엔티티는 다른 곳에서 참조하지 않는 고아 객체로 보고 삭제하느 기능이다. 따라서 이 기능은 참조하는 곳이 하나일 때만 사용해야 한다. 
+- 고아 객체는 참조가 제거된 엔티티는 다른 곳에서 참조하지 않는 고아 객체로 보고 삭제하는 기능이다. 따라서 이 기능은 참조하는 곳이 하나일 때만 사용해야 한다. 
 - orphanRemovel은 @OneToOne , @OneToMany에만 사용이 가능하다. 
 
 
 ### 8.6 영속성 전이 + 고아 객체, 생명주기 
 - CascadeType.ALL 과 orphanRemoval = true를 동시에 사용하면 어떻게 될까? 
-- 일반적으로 엔티티는 EntityManager.persit()를 통해 영속화되고 EntityManger.remove()를 통해 제거된다. 
+- 일반적으로 엔티티는 EntityManager.persist()를 통해 영속화되고 EntityManger.remove()를 통해 제거된다. 
 - 이것은 엔티티 스스로 생명주기를 관리한다는 뜻인데 두 옵션을 모두 활성화하면 부모 엔티티를 통해 자식의 생명 주기를 관리할 수 있다. 
