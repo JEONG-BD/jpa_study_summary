@@ -6,7 +6,7 @@
 - ORM을 사용하면 데이터베이스 테이블이 아닌 엔티티 객체를 대상으로 개발하므로 테이블이 아닌 엔티티 객체를 대상으로 하는 방법이 필요하다.다. 
 
 ## 10.1.1 JPQL 소개 
-- JPQL(Java Persstence Query Language)은 객체를 조회하는 객체지향 쿼리이다. 
+- JPQL(Java Persistence Query Language)은 객체를 조회하는 객체지향 쿼리이다. 
 - JPQL은 SQL을 추상화해서 특정 베이스에 의존하지 않고 SQL보다 간결하다. 
 ```java
 @Entity(name="Member")
