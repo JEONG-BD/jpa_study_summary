@@ -71,7 +71,7 @@ for(Object o: resultList){
 - Query 객체는 SELECT 절의 조회대상이 둘 이상이면 Object[] 를 하나면 Object를 반환한다. 
 #### 결과 조회 
 - query.getResultList() 결과 반환한다. 만약 결과가 없으면 빈 컬렉션을 반환한다. 
-- query.getSingleResult() 결고가 정확히 하나일 때 사용한다. 
+- query.getSingleResult() 결과가 정확히 하나일 때 사용한다. 
 - 결과가 없으면 javax.persistence.NoResultException예외를 반환한다. 
 - 결과가 1개 보다 많으면 javax.persistence.NonUniqueResultException예외가 발생한다. 
 
@@ -363,14 +363,14 @@ public class Member{
 #### 경로 표현식과 특징 
 - 상태 필드 경로
     - 경로 탐색의 끝이므로 더 탐색할 수 없다.
-```java
-select o.member from Order o
-```
+
 - 단일 값 연관 경로
     - 묵시적으로 내부 조인이 일어나고 계속 탐색할 수 있다.
     - 단일 값 연관 필드로 경로 탐색을 하면 SQL에서 내부 조인(묵시적 조인)이 일어난다.
     - 외부 조인은 명시적으로 JOIN키워드를 사용해야 한다.  
-
+```java
+select o.member from Order o
+```
 - 컬렉션 값 연관 경로 
     - t.members (컬렉션)까지는 경로탐색이 가능하지만 컬렉션에서 경로 탐색을 시작하는 것은 허락하지 않는다. 
     - 컬렉션에서 경로 탐색을 하고 싶으면 조인을 사용해야 한다. 
