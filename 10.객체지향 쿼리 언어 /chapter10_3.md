@@ -305,7 +305,7 @@ CriteriaBuilder cb = em.getCriteriaBuilder();
 CriteriaQuery<Member> cq = cb.createQuery(Member.class);
 
 Root<Member> m = cq.from(Member.class);
-Join(Member, Team> t = m.join("team");
+Join(Member, Team) t = m.join("team");
 
 List<Predicate> criteria = new ArrayList<Predicate>();
 if (age != null) criteria.add(cb.equal(m.<Integer>get("age"),
